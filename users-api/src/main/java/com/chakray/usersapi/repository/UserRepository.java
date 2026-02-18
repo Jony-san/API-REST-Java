@@ -30,7 +30,7 @@ public class UserRepository {
                 "user1@mail.com",//correo
                 "user1",//nombre
                 "+1 55 555 555 55",//telefono
-                "plaintext", // contraseña (despues se encripta)
+                "6XtYu7jcgLHDh4euISiB0w==", // example_1
                 "AARR990101XXX",//Tax_Id
                 now,//Fecha de creación
                 List.of(//Direcciones
@@ -45,8 +45,8 @@ public class UserRepository {
                 "user2@mail.com",
                 "user2",
                 "+1 55 555 555 56",
-                "plaintext",
-                "BBRR990101YYY",
+                "OVWI1+/iFqUWL/9SnRRJXw==", //example_2
+                "BBRR990101YYY", 
                 now,
                 new ArrayList<>()
                 )
@@ -57,7 +57,7 @@ public class UserRepository {
                 "user3@mail.com",
                 "user3",
                 "+1 55 555 555 57",
-                "plaintext",
+                "5YYrHfitB3VFs0FQdzxx0g==", //example_3
                 "CCRR990101ZZZ",
                 now,
                 new ArrayList<>()
@@ -68,6 +68,8 @@ public class UserRepository {
     public List<User> findAll() {
         return users;
     }
+
+    /*      Funciones de creación de usuario        */
 
     public void save(User user) {
         users.add(user);
