@@ -12,6 +12,9 @@ import java.time.ZoneId;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+//Encriptación de contraseña
+import com.chakray.usersapi.util.AES;
+import com.chakray.usersapi.util.AESEnv;
 
 import java.util.Comparator;
 import java.util.List;
@@ -22,8 +25,23 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    //Para usar contraseñas con Hash
+    //private final PasswordEncoder passwordEncoder;
+
+    /*
+    version con variables de entorno de sistema
+    Se puede definir la variable temporal con:
+    
+    export AES_SECRET="12345678901234567890123456789012"    (MAC)
+    set AES_SECRET=12345678901234567890123456789012         (cmd)
+    $env:AES_SECRET="12345678901234567890123456789012"      (PowerShell)
+
+    */
+    private final AESEnv aesEnv;
+
+    public UserService(UserRepository userRepository,  AESEnv aesEnv ) {
         this.userRepository = userRepository;
+        this.aesEnv = aesEnv;
     }
 
     public List<User> getUsers(String sortedBy, String filter) {
@@ -108,34 +126,36 @@ public class UserService {
 
     public User createUser(CreateUserRequest request) {
 
-    if (!RfcValidator.isValid(request.getTaxId())) {
-        throw new IllegalArgumentException("Invalid RFC format");
+        if (!RfcValidator.isValid(request.getTaxId())) {
+            throw new IllegalArgumentException("Invalid RFC format");
+        }
+
+        if (!PhoneValidator.isValid(request.getPhone())) {
+            throw new IllegalArgumentException("Invalid phone format");
+        }
+
+        if (userRepository.existsByTaxId(request.getTaxId())) {
+            throw new IllegalArgumentException("tax_id must be unique");
+        }
+
+        ZoneId madagascarZone = ZoneId.of("Indian/Antananarivo");
+
+        User user = new User(
+                UUID.randomUUID(),
+                request.getEmail(),
+                request.getName(),
+                request.getPhone(),
+                //AES.encrypt(request.getPassword()),    //Sin variable de entorno(clave hardcodeada, no recomendado)
+                aesEnv.encrypt(request.getPassword()),  //con variable de entorno
+                ////passwordEncoder.encode(password)    //Hash
+                request.getTaxId(),
+                LocalDateTime.now(madagascarZone),
+                List.of()
+        );
+
+        userRepository.save(user);
+
+        return user;
     }
-
-    if (!PhoneValidator.isValid(request.getPhone())) {
-        throw new IllegalArgumentException("Invalid phone format");
-    }
-
-    if (userRepository.existsByTaxId(request.getTaxId())) {
-        throw new IllegalArgumentException("tax_id must be unique");
-    }
-
-    ZoneId madagascarZone = ZoneId.of("Indian/Antananarivo");
-
-    User user = new User(
-            UUID.randomUUID(),
-            request.getEmail(),
-            request.getName(),
-            request.getPhone(),
-            request.getPassword(), // ciframos después
-            request.getTaxId(),
-            LocalDateTime.now(madagascarZone),
-            List.of()
-    );
-
-    userRepository.save(user);
-
-    return user;
-}
 
 }
