@@ -85,4 +85,13 @@ public class UserRepository {
         return users.stream()
             .anyMatch(u -> u.getTaxId().equals(taxId));
     }
+    
+        /*      Funciones de login       */
+    public User findByTaxId(String taxId) {
+    return users.stream()
+            .filter(u -> u.getTaxId().equals(taxId))
+            .findFirst()
+            .orElse(null);
+    }
+
 }
