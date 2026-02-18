@@ -228,6 +228,14 @@ public class UserService {
         return user;
     }
 
+    public void deleteUser(UUID id) {
+    
+        boolean deleted = userRepository.deleteById(id);
+    
+        if (!deleted) {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
 
 
 }
