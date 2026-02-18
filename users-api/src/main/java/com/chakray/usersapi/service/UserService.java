@@ -4,6 +4,14 @@ package com.chakray.usersapi.service;
 import com.chakray.usersapi.model.User;
 import com.chakray.usersapi.repository.UserRepository;
 import org.springframework.stereotype.Service;
+//importar validaciones de usuario
+import com.chakray.usersapi.dto.CreateUserRequest;
+import com.chakray.usersapi.validation.PhoneValidator;
+import com.chakray.usersapi.validation.RfcValidator;
+import java.time.ZoneId;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 
 import java.util.Comparator;
 import java.util.List;
@@ -97,4 +105,37 @@ public class UserService {
             default -> false;
         };
     }
+
+    public User createUser(CreateUserRequest request) {
+
+    if (!RfcValidator.isValid(request.getTaxId())) {
+        throw new IllegalArgumentException("Invalid RFC format");
+    }
+
+    if (!PhoneValidator.isValid(request.getPhone())) {
+        throw new IllegalArgumentException("Invalid phone format");
+    }
+
+    if (userRepository.existsByTaxId(request.getTaxId())) {
+        throw new IllegalArgumentException("tax_id must be unique");
+    }
+
+    ZoneId madagascarZone = ZoneId.of("Indian/Antananarivo");
+
+    User user = new User(
+            UUID.randomUUID(),
+            request.getEmail(),
+            request.getName(),
+            request.getPhone(),
+            request.getPassword(), // ciframos después
+            request.getTaxId(),
+            LocalDateTime.now(madagascarZone),
+            List.of()
+    );
+
+    userRepository.save(user);
+
+    return user;
+}
+
 }
