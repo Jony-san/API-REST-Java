@@ -94,4 +94,13 @@ public class UserRepository {
             .orElse(null);
     }
 
+    /*          Funcion de actualización         */
+    public User findById(UUID id) {
+    return users.stream()
+            .filter(u -> u.getId().equals(id))
+            .findFirst()
+            .orElse(null);
+    }
+
+
 }
