@@ -11,8 +11,11 @@ import com.chakray.usersapi.dto.CreateUserRequest;
 import jakarta.validation.Valid;
 //Login
 import com.chakray.usersapi.dto.LoginRequest;
+//Update
+import com.chakray.usersapi.dto.UpdateUserRequest;
 
 
+import java.util.UUID;
 import java.util.List;
 
 @RestController
@@ -57,6 +60,15 @@ public class UserController {
         return "Invalid credentials";
     }
 
+    @PatchMapping("/{id}")
+    public UserResponseDTO updateUser(
+            @PathVariable UUID id,
+            @RequestBody UpdateUserRequest request
+    ) {
+        return UserMapper.toDTO(
+                userService.updateUser(id, request)
+        );
+    }
 
 
 }
