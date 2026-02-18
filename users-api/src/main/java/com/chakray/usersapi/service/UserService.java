@@ -19,6 +19,9 @@ import com.chakray.usersapi.util.AESEnv;
 //Login
 import com.chakray.usersapi.dto.LoginRequest;
 
+//Actualizacion
+import com.chakray.usersapi.dto.UpdateUserRequest;
+
 
 import java.util.Comparator;
 import java.util.List;
@@ -164,16 +167,67 @@ public class UserService {
 
     public boolean login(LoginRequest request) {
 
-    User user = userRepository.findByTaxId(request.getTaxId());
+        User user = userRepository.findByTaxId(request.getTaxId());
 
-    if (user == null) {
-        return false;
+        if (user == null) {
+            return false;
+        }
+
+        String decryptedPassword = aesEnv.decrypt(user.getPassword());
+
+        return decryptedPassword.equals(request.getPassword());
     }
 
-    String decryptedPassword = aesEnv.decrypt(user.getPassword());
+    //Consideracion de update: si uno falla, pero previos no, los previos se actualizaron, informar cuales no
+    public User updateUser(UUID id, UpdateUserRequest request) {
 
-    return decryptedPassword.equals(request.getPassword());
-}
+        User user = userRepository.findById(id);
+
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        //Actualizando datos acorde a lo que se envio
+        if (request.getEmail() != null) {
+            user.setEmail(request.getEmail());
+        }
+
+        if (request.getName() != null) {
+            user.setName(request.getName());
+        }
+
+        //Adicional Validar que cumpla con el formato
+        if (request.getPhone() != null) {
+            if (!PhoneValidator.isValid(request.getPhone())) {
+                throw new IllegalArgumentException("Invalid phone format");
+            }
+            user.setPhone(request.getPhone());
+        }
+
+        //Adicional Validar existencia y que sea unico
+        if (request.getTaxId() != null) {
+            if (!RfcValidator.isValid(request.getTaxId())) {
+                throw new IllegalArgumentException("Invalid RFC format");
+            }
+
+            if (!request.getTaxId().equals(user.getTaxId())
+                    && userRepository.existsByTaxId(request.getTaxId())) {
+                throw new IllegalArgumentException("tax_id must be unique");
+            }
+
+            user.setTaxId(request.getTaxId());
+        }
+
+        if (request.getPassword() != null) {
+            user.setPassword(aesEnv.encrypt(request.getPassword()));
+            //Corroborar contraseña al momento de actualizacion, NO RECOMENDADO EN PRODUCCION, SOLO ES PARA PRUEBAS de funcionamiento
+            System.out.println("New Encrypted password: " + user.getPassword());
+
+        }
+
+        return user;
+    }
+
 
 
 }
