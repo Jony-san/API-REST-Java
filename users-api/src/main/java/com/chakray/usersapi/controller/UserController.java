@@ -6,6 +6,9 @@ import com.chakray.usersapi.service.UserService;
 import com.chakray.usersapi.dto.UserResponseDTO;
 import com.chakray.usersapi.util.UserMapper;
 import org.springframework.web.bind.annotation.*;
+//importar metodos de usuario
+import com.chakray.usersapi.dto.CreateUserRequest;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -29,5 +32,15 @@ public class UserController {
             .map(UserMapper::toDTO)
             .toList();
 }
+
+    @PostMapping
+    public UserResponseDTO createUser(
+            @Valid @RequestBody CreateUserRequest request
+    ) {
+        return UserMapper.toDTO(
+                userService.createUser(request)
+        );
+    }
+
 
 }
