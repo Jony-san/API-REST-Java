@@ -73,5 +73,9 @@ public class UserRepository {
         users.add(user);
     }
 
-    
+    //Revisar registro previo del RFC
+    public boolean existsByTaxId(String taxId) {
+        return users.stream()
+            .anyMatch(u -> u.getTaxId().equals(taxId));
+    }
 }
