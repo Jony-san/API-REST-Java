@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 //importar metodos de usuario
 import com.chakray.usersapi.dto.CreateUserRequest;
 import jakarta.validation.Valid;
+//Login
+import com.chakray.usersapi.dto.LoginRequest;
+
 
 import java.util.List;
 
@@ -41,6 +44,19 @@ public class UserController {
                 userService.createUser(request)
         );
     }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest request) {
+    
+        boolean authenticated = userService.login(request);
+    
+        if (authenticated) {
+            return "Login successful";
+        }
+    
+        return "Invalid credentials";
+    }
+
 
 
 }
