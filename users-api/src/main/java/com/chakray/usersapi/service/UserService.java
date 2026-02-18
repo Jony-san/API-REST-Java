@@ -22,6 +22,9 @@ import com.chakray.usersapi.dto.LoginRequest;
 //Actualizacion
 import com.chakray.usersapi.dto.UpdateUserRequest;
 
+//Manejo de errores
+import com.chakray.usersapi.util.UserNotFoundException;
+
 
 import java.util.Comparator;
 import java.util.List;
@@ -184,7 +187,7 @@ public class UserService {
         User user = userRepository.findById(id);
 
         if (user == null) {
-            throw new IllegalArgumentException("User not found");
+            throw new UserNotFoundException("User not found");
         }
 
         //Actualizando datos acorde a lo que se envio
@@ -233,7 +236,7 @@ public class UserService {
         boolean deleted = userRepository.deleteById(id);
     
         if (!deleted) {
-            throw new IllegalArgumentException("User not found");
+            throw new UserNotFoundException("User not found");
         }
     }
 
