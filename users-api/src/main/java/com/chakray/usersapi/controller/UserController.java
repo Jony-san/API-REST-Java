@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 //importar metodos de usuario
 import com.chakray.usersapi.dto.CreateUserRequest;
 import jakarta.validation.Valid;
-//Login
+//Login-dto
 import com.chakray.usersapi.dto.LoginRequest;
-//Update
+//Update-dto
 import com.chakray.usersapi.dto.UpdateUserRequest;
 
 
@@ -68,6 +68,14 @@ public class UserController {
         return UserMapper.toDTO(
                 userService.updateUser(id, request)
         );
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteUser(@PathVariable UUID id) {
+
+        userService.deleteUser(id);
+
+        return "User deleted successfully";
     }
 
 
