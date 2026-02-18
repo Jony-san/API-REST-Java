@@ -16,6 +16,10 @@ import java.util.UUID;
 import com.chakray.usersapi.util.AES;
 import com.chakray.usersapi.util.AESEnv;
 
+//Login
+import com.chakray.usersapi.dto.LoginRequest;
+
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -157,5 +161,19 @@ public class UserService {
 
         return user;
     }
+
+    public boolean login(LoginRequest request) {
+
+    User user = userRepository.findByTaxId(request.getTaxId());
+
+    if (user == null) {
+        return false;
+    }
+
+    String decryptedPassword = aesEnv.decrypt(user.getPassword());
+
+    return decryptedPassword.equals(request.getPassword());
+}
+
 
 }
