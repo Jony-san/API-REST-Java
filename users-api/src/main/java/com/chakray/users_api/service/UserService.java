@@ -1,0 +1,98 @@
+package com.chakray.usersapi.service;
+
+//importar usuarios y modelo
+import com.chakray.usersapi.model.User;
+import com.chakray.usersapi.repository.UserRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service//Componente de la capa de logica de negocio
+public class UserService {
+
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public List<User> getUsers(String sortedBy, String filter) {
+
+        List<User> users = userRepository.findAll();
+
+        // Aplicar primero el filtro
+        if (filter != null && !filter.isBlank()) {
+            users = applyFilter(users, filter);
+        }
+
+        // Ordenar
+        if (sortedBy != null && !sortedBy.isBlank()) {
+            users = applySorting(users, sortedBy);
+        }
+
+        return users;
+    }
+
+    private List<User> applySorting(List<User> users, String sortedBy) {
+
+        Comparator<User> comparator = switch (sortedBy) {
+            case "email" -> Comparator.comparing(User::getEmail);
+            case "id" -> Comparator.comparing(User::getId);
+            case "name" -> Comparator.comparing(User::getName);
+            case "phone" -> Comparator.comparing(User::getPhone);
+            case "tax_id" -> Comparator.comparing(User::getTaxId);
+            case "created_at" -> Comparator.comparing(User::getCreatedAt);
+            default -> null;
+        };
+
+        if (comparator == null) return users;
+
+        return users.stream()
+                .sorted(comparator)
+                .collect(Collectors.toList());
+    }
+
+    private List<User> applyFilter(List<User> users, String filter) {
+
+        // formato: field+operator+value
+        String[] parts = filter.split("\\+");
+
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Invalid filter format");
+        }
+
+        String field = parts[0];
+        String operator = parts[1];
+        String value = parts[2];
+
+        return users.stream()
+                .filter(user -> matches(user, field, operator, value))
+                .collect(Collectors.toList());
+    }
+
+    private boolean matches(User user, String field, String operator, String value) {
+
+        //Tomar campo de busqueda
+        String fieldValue = switch (field) {
+            case "email" -> user.getEmail();
+            case "name" -> user.getName();
+            case "phone" -> user.getPhone();
+            case "tax_id" -> user.getTaxId();
+            case "created_at" -> user.getCreatedAt().toString();
+            case "id" -> user.getId().toString();
+            default -> null;
+        };
+
+        if (fieldValue == null) return false;
+        //Aplicar operacion de busqueda
+        return switch (operator) {
+            case "co" -> fieldValue.contains(value);
+            case "eq" -> fieldValue.equals(value);
+            case "sw" -> fieldValue.startsWith(value);
+            case "ew" -> fieldValue.endsWith(value);
+            default -> false;
+        };
+    }
+}
