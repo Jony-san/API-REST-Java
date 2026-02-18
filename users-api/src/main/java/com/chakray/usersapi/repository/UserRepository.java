@@ -102,5 +102,8 @@ public class UserRepository {
             .orElse(null);
     }
 
+    public boolean deleteById(UUID id) {
+        return users.removeIf(u -> u.getId().equals(id));
+    }
 
 }
