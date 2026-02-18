@@ -57,6 +57,8 @@ public class UserService {
     private List<User> applyFilter(List<User> users, String filter) {
 
         // formato: field+operator+value
+        // En caso de que el navegador interprete "+" por " "
+        filter = filter.replace(" ", "+");
         String[] parts = filter.split("\\+");
 
         if (parts.length != 3) {
