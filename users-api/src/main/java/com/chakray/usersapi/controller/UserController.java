@@ -70,6 +70,10 @@ public class UserController {
         );
     }
 
+    /*
+    Consideración: En producción no se recomienda eliminar usuarios sino dejarlos en un estado inactivo
+    en caso de reactivación de usuarios
+    */
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable UUID id) {
 
