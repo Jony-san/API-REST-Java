@@ -71,6 +71,11 @@ public class UserRepository {
 
     public void save(User user) {
         users.add(user);
+        /*
+        Para comprobar que se encripto la contraseña se puede imprimir el dato
+        NO RECOMENDADO PARA PRODUCCION
+        */
+        //System.out.println("Encrypted password: " + user.getPassword());
     }
 
     //Revisar registro previo del RFC
