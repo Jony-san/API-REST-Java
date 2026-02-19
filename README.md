@@ -46,13 +46,27 @@ Modo de ejecución (Local)
 
 Java 17
 
-Maven 3.9+
+Maven 3.6x
 
 Docker (opcional)
 
-Ejecutar la aplicación
+NOTA:
+El proyecto incluye Maven Wrapper. 
+Puedes correr:
+```
+./mvnw clean install
+```
 
-Desde la raíz del proyecto:
+Clonar el repositorio y ubicarse dentro de la carpeta users-api
+```
+git clone https://github.com/TU_USUARIO/users-api.git
+cd users-api
+```
+Compilar
+```
+mvn clean install
+```
+Ejecutar la aplicación
 ```
 mvn spring-boot:run
 ```
