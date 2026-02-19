@@ -7,6 +7,7 @@ import com.chakray.usersapi.repository.UserRepository;
 import org.springframework.stereotype.Service;
 //importar validaciones de usuario
 import com.chakray.usersapi.dto.CreateUserRequest;
+import com.chakray.usersapi.dto.AddressDTO;
 import com.chakray.usersapi.validation.PhoneValidator;
 import com.chakray.usersapi.validation.RfcValidator;
 import java.time.ZoneId;
@@ -241,9 +242,40 @@ public class UserService {
 
         if (request.getPassword() != null) {
             user.setPassword(aesEnv.encrypt(request.getPassword()));
-            //Corroborar contraseña al momento de actualizacion, NO RECOMENDADO EN PRODUCCION, SOLO ES PARA PRUEBAS de funcionamiento
-            System.out.println("New Encrypted password: " + user.getPassword());
+        }
+        //Corroborar contraseña al momento de actualizacion, NO RECOMENDADO EN PRODUCCION, SOLO ES PARA PRUEBAS de funcionamiento
+        //System.out.println("New Encrypted password: " + user.getPassword());
 
+        // Actualizar direcciones
+        if (request.getAddresses() != null && !request.getAddresses().isEmpty()) {
+
+            for (AddressDTO addrRequest : request.getAddresses()) {
+
+                if (addrRequest.getId() == null) {
+                    continue;
+                }
+
+                Address existingAddress = user.getAddresses()
+                        .stream()
+                        .filter(a -> a.getId().equals(addrRequest.getId()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (existingAddress != null) {
+
+                    if (addrRequest.getName() != null) {
+                        existingAddress.setName(addrRequest.getName());
+                    }
+
+                    if (addrRequest.getStreet() != null) {
+                        existingAddress.setStreet(addrRequest.getStreet());
+                    }
+
+                    if (addrRequest.getCountryCode() != null) {
+                        existingAddress.setCountryCode(addrRequest.getCountryCode());
+                    }
+                }
+            }
         }
 
         return user;
