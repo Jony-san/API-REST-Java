@@ -134,3 +134,9 @@ DELETE /users/{id}
 POST /users/login
 
 Todos documentados y probables desde Swagger.
+
+Control de versiones
+------------------------------------------
+El proyecto fue gestionado mediante Git, manteniendo un repositorio desde el inicio del desarrollo para dar seguimiento incremental a los cambios.
+
+Se realizaron commits por funcionalidad (estructura base, entidades, validaciones, seguridad, Docker, etc.) con el objetivo de mantener trazabilidad y claridad en la evolución del código.
