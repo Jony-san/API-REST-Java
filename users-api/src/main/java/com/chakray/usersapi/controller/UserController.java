@@ -16,7 +16,8 @@ import com.chakray.usersapi.dto.UpdateUserRequest;
 //Documentación
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
+import io.swagger.v3.oas.annotations.Parameter;
+//operaciones java
 import java.util.UUID;
 import java.util.List;
 
@@ -57,10 +58,16 @@ public class UserController {
             /users?filter=phone+sw+555
             /users?filter=tax_id+eq+AARR990101XXX
         """
-)
+    )
     @GetMapping
     public List<UserResponseDTO> getUsers(
+        @Parameter(
+            description = "Field used for sorting: id, email, name, phone, tax_id, created_at"
+        )
         @RequestParam(required = false) String sortedBy,
+        @Parameter(
+            description = "Filtering format: field+operator+value (co, eq, sw, ew)"
+        )
         @RequestParam(required = false) String filter
     ) {
         return userService.getUsers(sortedBy, filter)
