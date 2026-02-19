@@ -20,6 +20,7 @@ Manejo global de excepciones
 Documentación automática con Swagger
 
 Dockerización
+
 Tecnologías utilizadas
 ------------------------------------------
 
@@ -56,6 +57,7 @@ Desde la raíz del proyecto:
 mvn spring-boot:run
 ```
 La API quedará disponible en:   http://localhost:8080
+
 Documentación Swagger
 ------------------------------------------
 
@@ -64,6 +66,7 @@ Una vez levantada la aplicación:
 http://localhost:8080/swagger-ui/index.html
 
 Desde ahí se pueden probar todos los endpoints directamente.
+
 Encriptación AES
 ------------------------------------------
 
