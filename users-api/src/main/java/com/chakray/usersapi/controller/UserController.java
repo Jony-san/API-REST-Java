@@ -96,7 +96,7 @@ public class UserController {
         • password is not returned in the response
         
         """
-)
+    )
     @PostMapping
     public UserResponseDTO createUser(
             @Valid @RequestBody CreateUserRequest request
@@ -131,15 +131,25 @@ public class UserController {
     @Operation(
     summary = "Update user by ID",
     description = """
-        Updates one or more attributes of an existing user by UUID.
+        Updates one or more attributes of an existing user.
 
         • Only provided fields are updated.
-
-        • User must exist.
+        • tax_id must remain unique.
+        • phone must respect AndresFormat validation.
+        • password is encrypted using AES-256.
+        
+        Address Update Rules:
+        • Addresses must include an existing address ID.
+        • If address ID is not provided, the address will not be updated.
+        • New addresses are not created in this endpoint.
         """
     )
     @PatchMapping("/{id}")
     public UserResponseDTO updateUser(
+            @Parameter(
+                description = "UUID of the user to update",
+                example = "a68e6e50-3adb-4fe3-b3a0-c5d0a306b6b5"
+            )
             @PathVariable UUID id,
             @RequestBody UpdateUserRequest request
     ) {
