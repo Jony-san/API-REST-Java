@@ -27,8 +27,8 @@ public class UserRepository {
 
         users.add(new User(
                 UUID.randomUUID(),
-                "user1@mail.com",//correo
-                "user1",//nombre
+                "user3@gmail.com",//correo
+                "user3",//nombre
                 "+1 55 555 555 55",//telefono
                 "6XtYu7jcgLHDh4euISiB0w==", // example_1
                 "AARR990101XXX",//Tax_Id
@@ -42,8 +42,8 @@ public class UserRepository {
 
         users.add(new User(
                 UUID.randomUUID(),
-                "user2@mail.com",
-                "user2",
+                "user1@gmail.com",
+                "user1",
                 "+1 55 555 555 56",
                 "OVWI1+/iFqUWL/9SnRRJXw==", //example_2
                 "BBRR990101YYY", 
@@ -54,8 +54,8 @@ public class UserRepository {
 
         users.add(new User(
                 UUID.randomUUID(),
-                "user3@mail.com",
-                "user3",
+                "user2@gmail.com",
+                "user2",
                 "+1 55 555 555 57",
                 "5YYrHfitB3VFs0FQdzxx0g==", //example_3
                 "CCRR990101ZZZ",
