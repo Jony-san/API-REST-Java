@@ -20,8 +20,8 @@ Manejo global de excepciones
 Documentación automática con Swagger
 
 Dockerización
-------------------------------------------
 Tecnologías utilizadas
+------------------------------------------
 
 Java 17 (Temurin)
 
@@ -38,8 +38,9 @@ Spring Validation
 Swagger / OpenAPI
 
 Docker
-------------------------------------------
+
 Modo de ejecución (Local)
+------------------------------------------
 1️⃣ Requisitos
 
 Java 17
@@ -55,16 +56,16 @@ Desde la raíz del proyecto:
 mvn spring-boot:run
 ```
 La API quedará disponible en:   http://localhost:8080
-------------------------------------------
 Documentación Swagger
+------------------------------------------
 
 Una vez levantada la aplicación:
 
 http://localhost:8080/swagger-ui/index.html
 
 Desde ahí se pueden probar todos los endpoints directamente.
-------------------------------------------
 Encriptación AES
+------------------------------------------
 
 Se implementó encriptación AES-256 para el manejo de información sensible.
 
@@ -76,7 +77,7 @@ Uso de variables de entorno.
 
 Permite configurar la clave sin exponerla en código.
 
-🧪 Versión con clave hardcodeada
+Versión con clave hardcodeada
 
 Útil únicamente para pruebas locales rápidas.
 
@@ -85,15 +86,16 @@ No recomendada para producción.
 Versión usando variables de entorno del sistema directamente.
 
 Estas versiones están organizadas dentro del servicio correspondiente para mostrar diferentes enfoques de configuración segura.
-------------------------------------------
 
 Hash (comentado)
+------------------------------------------
 
 Se dejó implementada la lógica para aplicar hash a contraseñas, pero actualmente está comentada.
 
 La intención fue mostrar cómo podría integrarse hashing (por ejemplo con BCrypt) en un entorno real, aunque para esta prueba no era un requerimiento obligatorio.
-------------------------------------------
+
 Ejecución con Docker
+------------------------------------------
 Construir imagen
 
 Desde la raíz del proyecto:
@@ -108,14 +110,16 @@ Luego acceder a:
 ```
 http://localhost:8080/swagger-ui/index.html
 ```
-------------------------------------------
+
 Base de datos
+------------------------------------------
 
 Se utiliza H2 en memoria para facilitar la ejecución sin configuraciones adicionales.
 
 Cada vez que se reinicia la aplicación, los datos se reinician.
-------------------------------------------
+
 Endpoints principales
+------------------------------------------
 GET /users
 
 POST /users
