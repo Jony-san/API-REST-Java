@@ -2,6 +2,7 @@ package com.chakray.usersapi.service;
 
 //importar usuarios y modelo
 import com.chakray.usersapi.model.User;
+import com.chakray.usersapi.model.Address;
 import com.chakray.usersapi.repository.UserRepository;
 import org.springframework.stereotype.Service;
 //importar validaciones de usuario
@@ -28,6 +29,7 @@ import com.chakray.usersapi.util.UserNotFoundException;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Service//Componente de la capa de logica de negocio
@@ -150,6 +152,22 @@ public class UserService {
 
         ZoneId madagascarZone = ZoneId.of("Indian/Antananarivo");
 
+        // Mapear direcciones
+        List<Address> addresses = request.getAddresses() == null
+                ? new ArrayList<>()
+                : request.getAddresses()
+                    .stream()
+                    .map(addrRequest -> {
+                        Address address = new Address();
+                        address.setId(addrRequest.getId());
+                        address.setName(addrRequest.getName());
+                        address.setStreet(addrRequest.getStreet());
+                        address.setCountryCode(addrRequest.getCountryCode());
+                        return address;
+                    })
+                    .toList();
+
+        // Crear usuario con direcciones ya mapeadas
         User user = new User(
                 UUID.randomUUID(),
                 request.getEmail(),
@@ -160,7 +178,7 @@ public class UserService {
                 ////passwordEncoder.encode(password)    //Hash
                 request.getTaxId(),
                 LocalDateTime.now(madagascarZone),
-                List.of()
+                addresses
         );
 
         userRepository.save(user);
